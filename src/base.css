@@ -1,0 +1,140 @@
+/* ==========================================================================
+   salve · base
+   Plain HTML looks good with zero classes. Everything is :where()-wrapped,
+   so a single class from you always wins.
+   ========================================================================== */
+
+@layer salve.base {
+  :where(html) {
+    font-family: var(--s-font-sans);
+    line-height: var(--s-leading-normal);
+    color: var(--s-text);
+    background-color: var(--s-bg);
+    accent-color: var(--s-accent);
+    caret-color: var(--s-accent);
+    scrollbar-color: var(--s-border-strong) transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--s-font-display);
+    font-weight: var(--s-weight-bold);
+    line-height: var(--s-leading-tight);
+    letter-spacing: var(--s-tracking-tight);
+  }
+
+  :where(h1) { font-size: var(--s-text-4xl); }
+  :where(h2) { font-size: var(--s-text-3xl); }
+  :where(h3) { font-size: var(--s-text-2xl); line-height: var(--s-leading-snug); }
+  :where(h4) { font-size: var(--s-text-xl); line-height: var(--s-leading-snug); }
+  :where(h5) { font-size: var(--s-text-lg); line-height: var(--s-leading-snug); }
+  :where(h6) { font-size: var(--s-text-base); line-height: var(--s-leading-snug); }
+
+  /* Only class-less links get link styling, so `<a class="btn">` stays clean */
+  :where(a:not([class])) {
+    color: var(--s-accent-text);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--s-duration-fast) var(--s-ease);
+
+    &:hover { text-decoration-color: currentColor; }
+  }
+
+  /* Links with a class are UI (nav, logo, card…): no browser blue */
+  :where(a[class]) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :where(:focus-visible) {
+    outline: 2px solid var(--s-ring);
+    outline-offset: 2px;
+  }
+
+  :where(code, kbd, samp, pre) {
+    font-family: var(--s-font-mono);
+    font-size: 0.9em;
+  }
+
+  :where(:not(pre) > code) {
+    padding: 0.15em 0.4em;
+    border-radius: var(--s-radius-sm);
+    background: var(--s-surface-2);
+  }
+
+  :where(pre) {
+    overflow-x: auto;
+    padding: var(--s-space-4) var(--s-space-5);
+    border-radius: var(--s-radius-lg);
+    background: var(--s-surface-2);
+    line-height: 1.65;
+    tab-size: 2;
+  }
+
+  :where(kbd) {
+    display: inline-block;
+    padding: 0.1em 0.45em;
+    border: 1px solid var(--s-border-strong);
+    border-block-end-width: 2px;
+    border-radius: var(--s-radius-sm);
+    background: var(--s-surface);
+    font-size: 0.8em;
+    line-height: 1.4;
+  }
+
+  :where(hr) {
+    border: 0;
+    border-block-start: 1px solid var(--s-border);
+    margin-block: var(--s-space-8);
+  }
+
+  :where(blockquote) {
+    padding-inline-start: var(--s-space-4);
+    border-inline-start: 3px solid var(--s-accent);
+    color: var(--s-text-muted);
+  }
+
+  :where(mark) {
+    padding-inline: 0.15em;
+    border-radius: 2px;
+    background: var(--s-warning-subtle);
+    color: inherit;
+  }
+
+  :where(small) { font-size: var(--s-text-sm); }
+
+  :where(abbr[title]) {
+    text-decoration: underline dotted;
+    cursor: help;
+  }
+
+  :where(fieldset) {
+    margin: 0;
+    padding: var(--s-space-4);
+    border: 1px solid var(--s-border);
+    border-radius: var(--s-radius-md);
+  }
+
+  :where(legend) {
+    padding-inline: var(--s-space-1);
+    font-weight: var(--s-weight-semibold);
+  }
+
+  :where(progress, meter) {
+    accent-color: var(--s-accent);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--s-accent) 28%, transparent);
+  }
+
+  ::placeholder {
+    color: var(--s-text-subtle);
+    opacity: 1;
+  }
+}

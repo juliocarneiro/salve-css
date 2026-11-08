@@ -1,0 +1,130 @@
+/* ==========================================================================
+   salve · button
+   <button class="btn">            solid (accent)
+   .btn-soft  .btn-outline  .btn-ghost   ·   .btn-sm  .btn-lg  .btn-icon  .btn-block
+   Any tone: .tone-danger …    Loading: aria-busy="true"
+   Per-instance tweaks: --btn-bg, --btn-fg, --btn-border, --btn-radius,
+                        --btn-height, --btn-px, --btn-font-size
+   ========================================================================== */
+
+@layer salve.components {
+  .btn {
+    --_bg: var(--btn-bg, var(--tone-solid, var(--s-accent)));
+    --_fg: var(--btn-fg, var(--tone-on, var(--s-on-accent)));
+    --_bd: var(--btn-border, transparent);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    min-block-size: var(--btn-height, var(--s-control-md));
+    padding-block: 0;
+    padding-inline: var(--btn-px, 1.1em);
+    border: 1px solid var(--_bd);
+    border-radius: var(--btn-radius, var(--s-radius-md));
+    background-color: var(--_bg);
+    color: var(--_fg);
+    font-family: inherit;
+    font-size: var(--btn-font-size, var(--s-text-sm));
+    font-weight: var(--s-weight-semibold);
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--s-duration-fast) var(--s-ease),
+      border-color var(--s-duration-fast) var(--s-ease),
+      color var(--s-duration-fast) var(--s-ease),
+      box-shadow var(--s-duration-fast) var(--s-ease),
+      scale var(--s-duration-fast) var(--s-ease);
+
+    /* salve-icons (.si / <s-icon>) and any inline <svg> */
+    --si-size: 1.15em;
+
+    & > svg {
+      inline-size: 1.15em;
+      block-size: 1.15em;
+      flex-shrink: 0;
+    }
+
+    &:hover:not(:disabled, [aria-disabled="true"], [aria-busy="true"]) {
+      background-color: color-mix(in oklab, var(--_bg), var(--_fg) 14%);
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"]) {
+      scale: 0.97;
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Loading state without extra markup */
+    &[aria-busy="true"] {
+      color: transparent;
+      cursor: progress;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        inline-size: 1.1em;
+        block-size: 1.1em;
+        border: 2px solid var(--_fg);
+        border-inline-end-color: transparent;
+        border-radius: 50%;
+        animation: s-spin 0.7s linear infinite;
+      }
+    }
+
+    @media (forced-colors: active) {
+      border-color: ButtonText;
+    }
+  }
+
+  .btn-soft {
+    --btn-bg: var(--tone-subtle, var(--s-accent-subtle));
+    --btn-fg: var(--tone-text, var(--s-accent-text));
+  }
+
+  .btn-outline {
+    --btn-bg: transparent;
+    --btn-fg: var(--tone-text, var(--s-accent-text));
+    --btn-border: color-mix(in oklab, currentColor 45%, transparent);
+  }
+
+  .btn-ghost {
+    --btn-bg: transparent;
+    --btn-fg: var(--tone-text, var(--s-text));
+  }
+
+  .btn-sm {
+    --btn-height: var(--s-control-sm);
+    --btn-px: 0.85em;
+    --btn-font-size: var(--s-text-xs);
+  }
+
+  .btn-lg {
+    --btn-height: var(--s-control-lg);
+    --btn-px: 1.4em;
+    --btn-font-size: var(--s-text-base);
+  }
+
+  .btn-icon {
+    padding-inline: 0;
+    aspect-ratio: 1;
+    min-inline-size: var(--btn-height, var(--s-control-md));
+  }
+
+  .btn-block {
+    inline-size: 100%;
+  }
+
+  @keyframes s-spin {
+    to { rotate: 1turn; }
+  }
+}

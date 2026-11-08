@@ -1,0 +1,217 @@
+/* ==========================================================================
+   salve · overlays — native HTML, no JS library, no focus-trap code.
+   Dialog:  <button command="show-modal" commandfor="d">Open</button>
+            <dialog class="dialog" id="d" closedby="any" aria-labelledby="t">…</dialog>
+   Drawer:  <dialog class="dialog drawer">…
+   Menu:    <button popovertarget="m">⋯</button> <div class="menu" id="m" popover>…</div>
+   Tooltip: <button data-tip="Copy" aria-label="Copy">…</button>
+   ========================================================================== */
+
+@layer salve.components {
+  /* Dialog ---------------------------------------------------------------- */
+  .dialog {
+    inline-size: min(var(--dialog-width, 32rem), 100% - var(--s-space-8));
+    max-inline-size: none;
+    max-block-size: min(85dvh, 100% - var(--s-space-8));
+    padding: var(--dialog-pad, var(--s-space-6));
+    border: 1px solid var(--s-border);
+    border-radius: var(--s-radius-xl);
+    background: var(--s-surface);
+    color: var(--s-text);
+    box-shadow: var(--s-shadow-xl);
+
+    /* closed / exit state */
+    opacity: 0;
+    translate: 0 0.75rem;
+    scale: 0.98;
+    transition:
+      opacity var(--s-duration) var(--s-ease),
+      translate var(--s-duration-slow) var(--s-ease-out),
+      scale var(--s-duration-slow) var(--s-ease-out),
+      display var(--s-duration-slow) allow-discrete,
+      overlay var(--s-duration-slow) allow-discrete;
+
+    &[open] {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 0.75rem;
+        scale: 0.98;
+      }
+    }
+
+    /* Page behind doesn't scroll — without touching <body> overflow */
+    &:modal { overscroll-behavior: contain; }
+
+    &::backdrop {
+      overflow: hidden;
+      overscroll-behavior: contain;
+      background-color: transparent;
+      backdrop-filter: blur(0);
+      transition:
+        background-color var(--s-duration-slow) var(--s-ease),
+        backdrop-filter var(--s-duration-slow) var(--s-ease),
+        display var(--s-duration-slow) allow-discrete,
+        overlay var(--s-duration-slow) allow-discrete;
+    }
+
+    &[open]::backdrop {
+      background-color: oklch(0.15 0.01 var(--s-hue) / 0.45);
+      backdrop-filter: blur(3px);
+
+      @starting-style {
+        background-color: transparent;
+        backdrop-filter: blur(0);
+      }
+    }
+
+    & .dialog-close {
+      position: absolute;
+      inset-block-start: var(--s-space-3);
+      inset-inline-end: var(--s-space-3);
+    }
+
+    & > form[method="dialog"]:last-child,
+    & .dialog-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: var(--s-space-2);
+      margin-block-start: var(--s-space-6);
+    }
+  }
+
+  /* Drawer: side sheet variant */
+  .drawer {
+    inline-size: min(var(--dialog-width, 24rem), 100% - var(--s-space-8));
+    block-size: 100dvh;
+    max-block-size: none;
+    margin: 0;
+    margin-inline-start: auto;
+    border-block: 0;
+    border-inline-end: 0;
+    border-radius: 0;
+    translate: 100% 0;
+    scale: 1;
+
+    &:dir(rtl) { translate: -100% 0; }
+
+    &[open] {
+      translate: 0 0;
+
+      @starting-style { translate: 100% 0; }
+    }
+  }
+
+  /* Menu (popover dropdown, anchored to its button where supported) ------- */
+  .menu {
+    min-inline-size: 12rem;
+    padding: var(--s-space-1);
+    border: 1px solid var(--s-border);
+    border-radius: var(--s-radius-lg);
+    background: var(--s-surface);
+    color: var(--s-text);
+    box-shadow: var(--s-shadow-lg);
+    font-size: var(--s-text-sm);
+
+    opacity: 0;
+    translate: 0 -0.25rem;
+    transition:
+      opacity var(--s-duration-fast) var(--s-ease),
+      translate var(--s-duration) var(--s-ease-out),
+      display var(--s-duration) allow-discrete,
+      overlay var(--s-duration) allow-discrete;
+
+    &:is(:popover-open, .\:popover-open) {
+      opacity: 1;
+      translate: 0 0;
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 -0.25rem;
+      }
+    }
+
+    @supports (position-area: block-end) {
+      inset: auto;
+      margin: var(--s-space-1) 0;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+
+    & :is(a, button) {
+      display: flex;
+      align-items: center;
+      gap: var(--s-space-2);
+      inline-size: 100%;
+      padding: 0.5em 0.75em;
+      border: 0;
+      border-radius: var(--s-radius-md);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: start;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:is(:hover, :focus-visible) {
+        background: var(--s-surface-2);
+        outline-offset: -2px;
+      }
+    }
+
+    & hr {
+      margin: var(--s-space-1) calc(var(--s-space-1) * -1);
+    }
+
+    & .menu-label {
+      padding: 0.5em 0.75em 0.25em;
+      color: var(--s-text-subtle);
+      font-size: var(--s-text-xs);
+      font-weight: var(--s-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: var(--s-tracking-wide);
+    }
+  }
+
+  /* Tooltip (CSS only) ---------------------------------------------------- */
+  [data-tip] {
+    position: relative;
+
+    &::after {
+      content: attr(data-tip);
+      position: absolute;
+      inset-block-end: calc(100% + 0.5rem);
+      left: 50%; /* physical on purpose: centering is symmetric */
+      z-index: var(--s-z-tooltip);
+      translate: -50% 0.25rem;
+      padding: 0.35em 0.65em;
+      border-radius: var(--s-radius-sm);
+      background: light-dark(var(--s-gray-900), var(--s-gray-100));
+      color: light-dark(var(--s-gray-50), var(--s-gray-950));
+      font-size: var(--s-text-xs);
+      font-weight: var(--s-weight-medium);
+      line-height: 1.3;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition:
+        opacity var(--s-duration-fast) var(--s-ease),
+        translate var(--s-duration-fast) var(--s-ease);
+    }
+
+    &:is(:hover, :focus-visible)::after {
+      opacity: 1;
+      translate: -50% 0;
+      transition-delay: 300ms;
+    }
+  }
+
+  [data-tip-pos="bottom"]::after {
+    inset-block-end: auto;
+    inset-block-start: calc(100% + 0.5rem);
+  }
+}

@@ -1,0 +1,80 @@
+/* ==========================================================================
+   salve · card
+   <article class="card">…</article>
+   .card-elevated   shadow instead of border
+   .card-interactive + <a class="card-link"> makes the whole card clickable
+   An <img> as first child bleeds to the edges automatically.
+   Tweaks: --card-pad, --card-gap, --card-radius, --card-bg
+   ========================================================================== */
+
+@layer salve.components {
+  .card {
+    --_pad: var(--card-pad, var(--s-space-6));
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap, var(--s-space-3));
+    padding: var(--_pad);
+    border: 1px solid var(--s-border);
+    border-radius: var(--card-radius, var(--s-radius-lg));
+    background: var(--card-bg, var(--s-surface));
+    color: var(--s-text);
+    transition:
+      box-shadow var(--s-duration) var(--s-ease),
+      translate var(--s-duration) var(--s-ease),
+      border-color var(--s-duration) var(--s-ease);
+
+    & > :is(img, picture, video, .card-media):first-child {
+      inline-size: calc(100% + var(--_pad) * 2);
+      max-inline-size: none;
+      margin: calc(var(--_pad) * -1) calc(var(--_pad) * -1) var(--s-space-2);
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
+      object-fit: cover;
+    }
+
+    & > .card-footer {
+      margin-block-start: auto;
+      padding-block-start: var(--s-space-4);
+    }
+  }
+
+  .card-elevated {
+    border-color: transparent;
+    box-shadow: var(--s-shadow-md);
+
+    @media (forced-colors: active) {
+      border-color: CanvasText;
+    }
+  }
+
+  .card-interactive {
+    &:hover {
+      translate: 0 -2px;
+      border-color: var(--s-border-strong);
+      box-shadow: var(--s-shadow-lg);
+    }
+
+    &:has(.card-link:focus-visible) {
+      outline: 2px solid var(--s-ring);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Stretched link: one real <a>, the whole card is the hit area */
+  .card-link {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      z-index: 1;
+    }
+
+    &:focus-visible { outline: none; }
+  }
+}

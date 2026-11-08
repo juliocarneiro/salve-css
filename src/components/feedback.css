@@ -1,0 +1,204 @@
+/* ==========================================================================
+   salve · feedback
+   .badge  .alert  .progress  .spinner  .skeleton  .toast-region / .toast
+   All of them accept tones (.tone-success, .tone-danger…).
+   ========================================================================== */
+
+@layer salve.components {
+  /* Badge ----------------------------------------------------------------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    inline-size: fit-content; /* never stretched by a flex/grid parent */
+    padding: 0.2em 0.65em;
+    border-radius: var(--badge-radius, var(--s-radius-full));
+    background: var(--tone-subtle, var(--s-accent-subtle));
+    color: var(--tone-text, var(--s-accent-text));
+    font-size: var(--s-text-xs);
+    font-weight: var(--s-weight-semibold);
+    line-height: 1.4;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    @media (forced-colors: active) {
+      border: 1px solid CanvasText;
+    }
+  }
+
+  .badge-solid {
+    background: var(--tone-solid, var(--s-accent));
+    color: var(--tone-on, var(--s-on-accent));
+  }
+
+  .badge-outline {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 40%, transparent);
+  }
+
+  /* Status dot — color is never the only signal, keep the text next to it */
+  .badge-dot::before {
+    content: "";
+    inline-size: 0.5em;
+    block-size: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* Alert ----------------------------------------------------------------- */
+  .alert {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--s-space-3);
+    padding: var(--s-space-4);
+    border: 1px solid color-mix(in oklab, var(--tone-solid, var(--s-accent)) 30%, transparent);
+    border-radius: var(--s-radius-lg);
+    background: var(--tone-subtle, var(--s-accent-subtle));
+    color: var(--s-text);
+    font-size: var(--s-text-sm);
+
+    &:not(:has(> .alert-icon)) {
+      grid-template-columns: 1fr;
+    }
+
+    & > .alert-icon {
+      --si-size: 1.25rem; /* salve-icons */
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      color: var(--tone-text, var(--s-accent-text));
+    }
+
+    & .alert-title {
+      margin-block-end: var(--s-space-1);
+      color: var(--tone-text, var(--s-accent-text));
+      font-weight: var(--s-weight-semibold);
+    }
+  }
+
+  /* Progress (native <progress class="progress">) -------------------------- */
+  .progress {
+    --_fill: var(--tone-solid, var(--s-accent));
+
+    appearance: none;
+    display: block;
+    inline-size: 100%;
+    block-size: var(--progress-height, 0.5rem);
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--s-radius-full);
+    background: var(--s-surface-2);
+    color: var(--_fill);
+
+    &::-webkit-progress-bar { background: var(--s-surface-2); }
+    &::-webkit-progress-value {
+      border-radius: inherit;
+      background: var(--_fill);
+      transition: inline-size var(--s-duration-slow) var(--s-ease);
+    }
+    &::-moz-progress-bar {
+      border-radius: inherit;
+      background: var(--_fill);
+    }
+
+    /* Indeterminate */
+    &:indeterminate {
+      background: linear-gradient(
+          90deg,
+          transparent 0 30%,
+          var(--_fill) 30% 60%,
+          transparent 60%
+        )
+        var(--s-surface-2);
+      background-size: 250% 100%;
+      animation: s-indeterminate 1.4s var(--s-ease-in-out) infinite;
+    }
+    &:indeterminate::-webkit-progress-bar { background: transparent; }
+    &:indeterminate::-moz-progress-bar { background: transparent; }
+  }
+
+  @keyframes s-indeterminate {
+    from { background-position: 100% 0; }
+    to   { background-position: -50% 0; }
+  }
+
+  /* Spinner --------------------------------------------------------------- */
+  .spinner {
+    display: inline-block;
+    inline-size: var(--spinner-size, 1.25em);
+    aspect-ratio: 1;
+    border: 2px solid color-mix(in oklab, currentColor 20%, transparent);
+    border-block-start-color: currentColor;
+    border-radius: 50%;
+    animation: s-spin 0.7s linear infinite;
+    vertical-align: middle;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: 1.6s;
+    }
+  }
+
+  /* Skeleton — placeholder while content loads ---------------------------- */
+  .skeleton {
+    display: block;
+    min-block-size: 1em;
+    border-radius: var(--s-radius-sm);
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0,
+        color-mix(in oklab, var(--s-surface) 65%, transparent) 50%,
+        transparent 100%
+      ) 0 0 / 200% 100% no-repeat,
+      var(--s-surface-2);
+    color: transparent;
+    animation: s-shimmer 1.6s linear infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  @keyframes s-shimmer {
+    from { background-position: 150% 0, 0 0; }
+    to   { background-position: -50% 0, 0 0; }
+  }
+
+  /* Toast ----------------------------------------------------------------- */
+  .toast-region {
+    position: fixed;
+    inset-block-end: var(--s-space-4);
+    inset-inline-end: var(--s-space-4);
+    z-index: var(--s-z-toast);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--s-space-2);
+    max-inline-size: calc(100vw - var(--s-space-8));
+    pointer-events: none;
+  }
+
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-3);
+    inline-size: min(24rem, 100%);
+    padding: var(--s-space-3) var(--s-space-4);
+    border: 1px solid var(--s-border);
+    border-inline-start: 3px solid var(--tone-solid, var(--s-accent));
+    border-radius: var(--s-radius-md);
+    background: var(--s-surface);
+    color: var(--s-text);
+    font-size: var(--s-text-sm);
+    box-shadow: var(--s-shadow-lg);
+    pointer-events: auto;
+    transition:
+      opacity var(--s-duration) var(--s-ease),
+      translate var(--s-duration-slow) var(--s-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 0.75rem;
+    }
+  }
+}

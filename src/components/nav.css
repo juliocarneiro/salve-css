@@ -1,0 +1,115 @@
+/* ==========================================================================
+   salve · navigation & content
+   .navbar  .nav-link (aria-current="page")  .breadcrumb  .prose
+   ========================================================================== */
+
+@layer salve.components {
+  /* Navbar: sticky, translucent ------------------------------------------- */
+  .navbar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--s-z-sticky);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-space-4);
+    min-block-size: 4rem;
+    padding-block: var(--s-space-2);
+    padding-inline: var(--s-gutter);
+    border-block-end: 1px solid var(--s-border);
+    background: color-mix(in oklab, var(--s-bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.45em 0.75em;
+    border-radius: var(--s-radius-md);
+    color: var(--s-text-muted);
+    font-size: var(--s-text-sm);
+    font-weight: var(--s-weight-medium);
+    text-decoration: none;
+    transition:
+      color var(--s-duration-fast) var(--s-ease),
+      background-color var(--s-duration-fast) var(--s-ease);
+
+    &:hover {
+      background: var(--s-surface-2);
+      color: var(--s-text);
+    }
+
+    &[aria-current="page"] {
+      color: var(--s-text);
+      font-weight: var(--s-weight-semibold);
+    }
+  }
+
+  /* Breadcrumb: <nav aria-label="Breadcrumb"><ol class="breadcrumb">… */
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--s-text-muted);
+    font-size: var(--s-text-sm);
+
+    & li:not(:last-child)::after {
+      content: "/" / "";
+      margin-inline-start: var(--s-space-2);
+      color: var(--s-text-subtle);
+    }
+
+    & a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover { color: var(--s-text); }
+    }
+
+    & [aria-current="page"] {
+      color: var(--s-text);
+      font-weight: var(--s-weight-medium);
+    }
+  }
+
+  /* Prose: long-form text from a CMS/markdown, styled with zero classes --- */
+  .prose {
+    max-inline-size: var(--s-measure);
+    font-size: var(--prose-size, var(--s-text-lg));
+    line-height: var(--s-leading-relaxed);
+
+    & > :where(* + *) { margin-block-start: 1.25em; }
+
+    & :where(h2, h3, h4) { margin-block-start: 1.9em; }
+    & :where(h2 + *, h3 + *, h4 + *) { margin-block-start: 0.6em; }
+    & :where(h2) { font-size: var(--s-text-2xl); }
+    & :where(h3) { font-size: var(--s-text-xl); }
+    & :where(h4) { font-size: var(--s-text-lg); }
+
+    & :where(ul, ol) { padding-inline-start: 1.4em; }
+    & :where(li + li) { margin-block-start: 0.4em; }
+    & li::marker { color: var(--s-text-subtle); }
+
+    & :where(a) {
+      color: var(--s-accent-text);
+      text-underline-offset: 0.2em;
+    }
+
+    & :where(img, video, figure) { border-radius: var(--s-radius-lg); }
+    & :where(figcaption) {
+      margin-block-start: 0.6em;
+      color: var(--s-text-muted);
+      font-size: var(--s-text-sm);
+    }
+
+    & :where(pre) { font-size: 0.85em; }
+    & :where(hr) { margin-block: 2.5em; }
+    & :where(blockquote) { font-style: italic; }
+  }
+}

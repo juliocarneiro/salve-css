@@ -1,0 +1,51 @@
+/* ==========================================================================
+   salve · tones
+   One modifier system for every component. A tone sets four local colors
+   that buttons, badges, alerts… read. Put it on the component or on a
+   parent to tone a whole group:
+     <button class="btn tone-danger">   <div class="tone-success">…</div>
+   ========================================================================== */
+
+@layer salve.components {
+  .tone-accent {
+    --tone-solid: var(--s-accent);
+    --tone-subtle: var(--s-accent-subtle);
+    --tone-text: var(--s-accent-text);
+    --tone-on: var(--s-on-accent);
+  }
+
+  .tone-neutral {
+    --tone-solid: light-dark(var(--s-gray-900), var(--s-gray-100));
+    --tone-subtle: var(--s-surface-2);
+    --tone-text: var(--s-text);
+    --tone-on: light-dark(var(--s-gray-50), var(--s-gray-950));
+  }
+
+  .tone-success {
+    --tone-solid: var(--s-success);
+    --tone-subtle: var(--s-success-subtle);
+    --tone-text: var(--s-success-text);
+    --tone-on: var(--s-on-success);
+  }
+
+  .tone-warning {
+    --tone-solid: var(--s-warning);
+    --tone-subtle: var(--s-warning-subtle);
+    --tone-text: var(--s-warning-text);
+    --tone-on: var(--s-on-warning);
+  }
+
+  .tone-danger {
+    --tone-solid: var(--s-danger);
+    --tone-subtle: var(--s-danger-subtle);
+    --tone-text: var(--s-danger-text);
+    --tone-on: var(--s-on-danger);
+  }
+
+  .tone-info {
+    --tone-solid: var(--s-info);
+    --tone-subtle: var(--s-info-subtle);
+    --tone-text: var(--s-info-text);
+    --tone-on: var(--s-on-info);
+  }
+}

@@ -1,0 +1,172 @@
+/* ==========================================================================
+   salve · layout primitives
+   Small, composable layouts that are responsive by themselves — no media
+   queries. Each one is tuned with a custom property, inline or via class:
+     <div class="grid" style="--min: 14rem; --gap: var(--s-space-8)">
+   ========================================================================== */
+
+@layer salve.layout {
+  /* Stack — vertical flow with consistent gap. Replaces margin juggling. */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--gap, var(--s-space-4));
+  }
+
+  /* Cluster — inline items that wrap: tags, buttons, nav links. */
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: var(--align, center);
+    justify-content: var(--justify, flex-start);
+    gap: var(--gap, var(--s-space-3));
+  }
+
+  /* Split — two groups pushed to opposite ends (logo ↔ nav, title ↔ action). */
+  .split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: var(--align, center);
+    justify-content: space-between;
+    gap: var(--gap, var(--s-space-4));
+  }
+
+  /* Center — the eternal question, answered: centers on both axes. */
+  .center {
+    display: grid;
+    place-items: center;
+    place-content: center;
+  }
+
+  /* Container — centered, max-width, with side gutters. */
+  .container {
+    inline-size: 100%;
+    max-inline-size: var(--max, var(--s-container));
+    margin-inline: auto;
+    padding-inline: var(--gutter, var(--s-gutter));
+  }
+
+  /* Grid — as many columns as fit, each at least --min wide. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(
+      var(--fit, auto-fit),
+      minmax(min(var(--min, 16rem), 100%), 1fr)
+    );
+    gap: var(--gap, var(--s-space-6));
+  }
+
+  /* Sidebar — side panel + content; stacks when content gets too narrow.
+     The side is the first child; add .sidebar-end to put it last. */
+  .sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap, var(--s-space-6));
+
+    & > :first-child {
+      flex-basis: var(--side, 16rem);
+      flex-grow: 1;
+    }
+
+    & > :last-child {
+      flex-basis: 0;
+      flex-grow: 999;
+      min-inline-size: var(--content-min, 55%);
+    }
+  }
+
+  .sidebar-end {
+    & > :first-child {
+      flex-basis: 0;
+      flex-grow: 999;
+      min-inline-size: var(--content-min, 55%);
+    }
+
+    & > :last-child {
+      flex-basis: var(--side, 16rem);
+      flex-grow: 1;
+      min-inline-size: 0;
+    }
+  }
+
+  /* Switcher — items in a row, all switch to a column at once below --threshold. */
+  .switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap, var(--s-space-6));
+
+    & > * {
+      flex-grow: 1;
+      flex-basis: calc((var(--threshold, 40rem) - 100%) * 999);
+    }
+  }
+
+  /* Cover — full-height block with one vertically centered child (.cover-main). */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    min-block-size: var(--min-h, 100dvh);
+    gap: var(--gap, var(--s-space-4));
+    padding: var(--pad, var(--s-space-6));
+
+    & > .cover-main {
+      margin-block: auto;
+    }
+  }
+
+  /* Frame — fixed aspect ratio media box; images/videos fill it. */
+  .frame {
+    aspect-ratio: var(--ratio, 16 / 9);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+
+    & > :is(img, video, iframe) {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+  }
+
+  /* Reel — horizontal scroller with snap points (carousels, card rows). */
+  .reel {
+    display: flex;
+    gap: var(--gap, var(--s-space-4));
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: var(--gap, var(--s-space-4));
+    padding-block-end: var(--s-space-2);
+
+    & > * {
+      flex: 0 0 var(--item, min(80%, 18rem));
+      scroll-snap-align: start;
+    }
+  }
+
+  /* Content grid — page column with opt-in breakout:
+       <main class="content-grid"><p>…</p><img class="bleed"></main> */
+  .content-grid {
+    --_gutter: var(--gutter, var(--s-gutter));
+    --_content: min(var(--max, var(--s-container-md)), 100% - var(--_gutter) * 2);
+    --_wide: minmax(0, calc((var(--wide, var(--s-container-xl)) - var(--max, var(--s-container-md))) / 2));
+
+    display: grid;
+    grid-template-columns:
+      [bleed-start] minmax(var(--_gutter), 1fr)
+      [wide-start] var(--_wide)
+      [content-start] var(--_content) [content-end]
+      var(--_wide) [wide-end]
+      minmax(var(--_gutter), 1fr) [bleed-end];
+
+    & > * { grid-column: content; }
+    & > .wide { grid-column: wide; }
+    & > .bleed { grid-column: bleed; }
+  }
+
+  /* Container query context: children can use @sm:/@md:/@lg: utilities. */
+  .cq {
+    container-type: inline-size;
+  }
+}

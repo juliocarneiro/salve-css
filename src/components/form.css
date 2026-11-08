@@ -1,0 +1,284 @@
+/* ==========================================================================
+   salve · forms
+   <div class="field">
+     <label for="email">E-mail</label>
+     <input class="input" id="email" type="email" required>
+     <p class="hint">We never share it.</p>
+     <p class="error">Enter a valid e-mail.</p>   ← shown only after the user interacts
+   </div>
+   .input works on <input>, <select> and <textarea>.
+   Also: .input-group, .check, .switch, .segmented
+   ========================================================================== */
+
+@layer salve.components {
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-space-2);
+
+    & > label,
+    & > .label {
+      font-size: var(--s-text-sm);
+      font-weight: var(--s-weight-medium);
+    }
+
+    & .hint {
+      font-size: var(--s-text-sm);
+      color: var(--s-text-muted);
+    }
+
+    & .error {
+      display: none;
+      font-size: var(--s-text-sm);
+      color: var(--s-danger-text);
+    }
+
+    /* :user-invalid = only after the user touched it. No red on page load. */
+    &:has(:user-invalid) .error { display: block; }
+    &:has(:user-invalid) .hint { display: none; }
+  }
+
+  .input {
+    --_ring: var(--s-accent);
+
+    appearance: none;
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--input-height, var(--s-control-md));
+    padding: 0.5em 0.8em;
+    border: 1px solid var(--s-border-strong);
+    border-radius: var(--input-radius, var(--s-radius-md));
+    background-color: var(--s-surface);
+    color: var(--s-text);
+    font-size: var(--s-text-sm);
+    line-height: 1.4;
+    transition:
+      border-color var(--s-duration-fast) var(--s-ease),
+      box-shadow var(--s-duration-fast) var(--s-ease);
+
+    /* iOS zooms into inputs under 16px — not anymore */
+    @media (pointer: coarse) {
+      font-size: max(1rem, var(--s-text-sm));
+    }
+
+    &:hover:not(:disabled, :focus) {
+      border-color: var(--s-text-muted);
+    }
+
+    &:focus {
+      border-color: var(--_ring);
+      /* transparent outline becomes visible in Windows High Contrast */
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--_ring) 28%, transparent);
+    }
+
+    &:user-invalid {
+      --_ring: var(--s-danger);
+      border-color: var(--s-danger);
+    }
+
+    &:disabled {
+      background-color: var(--s-surface-2);
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    &:read-only:not(select) {
+      background-color: var(--s-surface-2);
+    }
+
+    &::file-selector-button {
+      margin-inline-end: 0.75em;
+      padding: 0.25em 0.75em;
+      border: 0;
+      border-radius: var(--s-radius-sm);
+      background: var(--s-surface-2);
+      color: var(--s-text);
+      font: inherit;
+      cursor: pointer;
+    }
+  }
+
+  textarea.input {
+    min-block-size: 6rem;
+    padding-block: 0.65em;
+  }
+
+  /* Native <select>, custom chevron drawn with currentColor gradients */
+  select.input {
+    padding-inline-end: 2.4em;
+    background-image:
+      linear-gradient(45deg, transparent 50%, currentColor 50%),
+      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.15em) 55%,
+      calc(100% - 0.8em) 55%;
+    background-size: 0.35em 0.35em;
+    background-repeat: no-repeat;
+
+    &:dir(rtl) {
+      background-position:
+        0.8em 55%,
+        1.15em 55%;
+    }
+  }
+
+  /* Input with prefix/suffix: <div class="input-group"><span>R$</span><input class="input"></div> */
+  .input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--s-border-strong);
+    border-radius: var(--input-radius, var(--s-radius-md));
+    background: var(--s-surface);
+    transition:
+      border-color var(--s-duration-fast) var(--s-ease),
+      box-shadow var(--s-duration-fast) var(--s-ease);
+
+    &:focus-within {
+      border-color: var(--s-accent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--s-accent) 28%, transparent);
+    }
+
+    &:has(:user-invalid) {
+      border-color: var(--s-danger);
+    }
+
+    & > .input {
+      flex: 1;
+      min-inline-size: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      outline: none;
+    }
+
+    & > :not(.input) {
+      padding-inline: 0.8em;
+      color: var(--s-text-muted);
+      font-size: var(--s-text-sm);
+      white-space: nowrap;
+    }
+  }
+
+  /* Checkbox / radio row */
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-size: var(--s-text-sm);
+    cursor: pointer;
+
+    & > input:not(.switch) {
+      flex-shrink: 0;
+      inline-size: 1.15em;
+      block-size: 1.15em;
+      margin: 0;
+      accent-color: var(--s-accent);
+      cursor: pointer;
+    }
+
+    &:has(:disabled) {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Switch: <input type="checkbox" role="switch" class="switch"> */
+  .switch {
+    --_track: var(--s-border-strong);
+    --_thumb: #fff;
+
+    appearance: none;
+    flex-shrink: 0;
+    inline-size: 2.5em;
+    block-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--s-radius-full);
+    background-color: var(--_track);
+    background-image: radial-gradient(
+      circle closest-side,
+      var(--_thumb) 78%,
+      transparent calc(78% + 1px)
+    );
+    background-size: 1.5em 1.5em;
+    background-repeat: no-repeat;
+    background-position: left center;
+    cursor: pointer;
+    transition:
+      background-color var(--s-duration) var(--s-ease),
+      background-position var(--s-duration) var(--s-ease-out);
+
+    &:checked {
+      --_track: var(--s-accent);
+      background-position: right center;
+    }
+
+    &:dir(rtl) { background-position: right center; }
+    &:dir(rtl):checked { background-position: left center; }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (forced-colors: active) {
+      border: 1px solid ButtonText;
+    }
+  }
+
+  /* Segmented control built on native radios:
+     <div class="segmented"><label><input type="radio" name="v" checked>Mês</label>…</div> */
+  .segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: var(--s-radius-md);
+    background: var(--s-surface-2);
+
+    & > label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      min-block-size: calc(var(--s-control-md) - 6px);
+      padding-inline: 0.9em;
+      border-radius: calc(var(--s-radius-md) - 2px);
+      color: var(--s-text-muted);
+      font-size: var(--s-text-sm);
+      font-weight: var(--s-weight-medium);
+      cursor: pointer;
+      transition:
+        background-color var(--s-duration-fast) var(--s-ease),
+        color var(--s-duration-fast) var(--s-ease);
+
+      &:hover { color: var(--s-text); }
+
+      &:has(:checked) {
+        background: var(--s-surface);
+        color: var(--s-text);
+        box-shadow: var(--s-shadow-sm);
+      }
+
+      &:has(:focus-visible) {
+        outline: 2px solid var(--s-ring);
+        outline-offset: 1px;
+      }
+
+      @media (forced-colors: active) {
+        &:has(:checked) { outline: 2px solid Highlight; }
+      }
+    }
+
+    & input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  input[type="range"] {
+    accent-color: var(--s-accent);
+  }
+}

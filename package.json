@@ -1,0 +1,57 @@
+{
+  "name": "salve-css",
+  "version": "0.1.0",
+  "description": "CSS que alivia: a pure-CSS design system that fixes the everyday pains of styling the web. Layers, fluid type, OKLCH themes, intrinsic layouts, native components.",
+  "type": "module",
+  "main": "dist/salve.css",
+  "style": "dist/salve.css",
+  "exports": {
+    ".": "./dist/salve.css",
+    "./min": "./dist/salve.min.css",
+    "./theme": {
+      "types": "./runtime/theme.d.ts",
+      "default": "./runtime/theme.js"
+    },
+    "./src/*": "./src/*",
+    "./build": "./lib/build.js"
+  },
+  "bin": {
+    "salve": "bin/salve.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "lib",
+    "bin",
+    "runtime"
+  ],
+  "scripts": {
+    "build": "node bin/salve.js build -c none -o dist/salve.css && node bin/salve.js build -c none -m -o dist/salve.min.css",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cascade-layers",
+    "container-queries",
+    "css",
+    "css-framework",
+    "dark-mode",
+    "design-system",
+    "nextjs",
+    "oklch",
+    "react",
+    "ssr",
+    "utility-first"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<seu-usuario>/salve-css.git"
+  },
+  "homepage": "https://salve.vercel.app"
+}
