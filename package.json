@@ -51,7 +51,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/<seu-usuario>/salve-css.git"
+    "url": "git+https://github.com/juliocarneiro/salve-css.git"
   },
-  "homepage": "https://salve.vercel.app"
+  "homepage": "https://github.com/juliocarneiro/salve-css#readme",
+  "bugs": {
+    "url": "https://github.com/juliocarneiro/salve-css/issues"
+  },
+  "author": "Julio Carneiro"
 }

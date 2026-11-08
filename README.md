@@ -1230,7 +1230,7 @@ export function Button({ variant, tone, size, className = "", ...props }) {
 
 ## Ícones: salve-icons
 
-O [`salve-icons`](../salve-icons) é a biblioteca de ícones irmã do salve: 292 ícones de traço, incluindo redes sociais. Eles herdam a cor (`currentColor`) e o tamanho (`1em`) do texto, então se alinham sozinhos com botões, badges e links. Também têm componentes React que funcionam em Server Components.
+O [`salve-icons`](https://github.com/juliocarneiro/salve-icons) é a biblioteca de ícones irmã do salve: 292 ícones de traço, incluindo redes sociais. Eles herdam a cor (`currentColor`) e o tamanho (`1em`) do texto, então se alinham sozinhos com botões, badges e links. Também têm componentes React que funcionam em Server Components.
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/salve-icons/dist/salve-icons.css">
@@ -1329,7 +1329,7 @@ O pacote completo tem cerca de 87 KB minificado e 15 KB com gzip. Com o CLI voc�
 ## Desenvolvimento
 
 ```bash
-git clone https://github.com/<seu-usuario>/salve-css.git
+git clone https://github.com/juliocarneiro/salve-css.git
 cd salve-css
 npm run build     # gera dist/salve.css e dist/salve.min.css
 ```
@@ -1348,7 +1348,7 @@ bin/salve.js          CLI
 dist/                 gerado pelo build (publicado no npm, fora do git)
 ```
 
-O site de documentação fica num projeto separado: [salve-site](../salve-site).
+O site de documentação fica num projeto separado: [salve-site](https://github.com/juliocarneiro/salve-site).
 
 **Convenções**
 
