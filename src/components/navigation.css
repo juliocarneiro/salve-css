@@ -1,0 +1,214 @@
+/* ==========================================================================
+   salve · navigation patterns
+   .nav-list    vertical menu for sidebars (aria-current="page" = active)
+   .pagination  page links (aria-current="page")
+   .steps       progress through a flow (data-state="done", aria-current="step")
+   ========================================================================== */
+
+@layer salve.components {
+  /* Nav list ---------------------------------------------------------------- */
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & :is(a, button) {
+      display: flex;
+      align-items: center;
+      gap: 0.75em;
+      inline-size: 100%;
+      padding: 0.55em 0.75em;
+      border: 0;
+      border-radius: var(--s-radius-md);
+      background: none;
+      color: var(--s-text-muted);
+      font: inherit;
+      font-size: var(--s-text-sm);
+      font-weight: var(--s-weight-medium);
+      text-align: start;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        background-color var(--s-duration-fast) var(--s-ease),
+        color var(--s-duration-fast) var(--s-ease);
+
+      &:hover {
+        background: var(--s-surface-2);
+        color: var(--s-text);
+      }
+
+      &:is([aria-current="page"], [aria-current="true"]) {
+        background: var(--s-accent-subtle);
+        color: var(--s-accent-text);
+      }
+
+      & > .badge { margin-inline-start: auto; }
+
+      @media (forced-colors: active) {
+        &[aria-current] { outline: 2px solid Highlight; }
+      }
+    }
+
+    & .nav-label {
+      padding: var(--s-space-4) 0.75em var(--s-space-1);
+      color: var(--s-text-subtle);
+      font-size: var(--s-text-xs);
+      font-weight: var(--s-weight-semibold);
+      letter-spacing: var(--s-tracking-wide);
+      text-transform: uppercase;
+    }
+  }
+
+  /* Pagination -------------------------------------------------------------- */
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--s-text-sm);
+    font-variant-numeric: tabular-nums;
+
+    & :is(a, button, .pagination-gap) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35em;
+      min-inline-size: var(--s-control-sm);
+      block-size: var(--s-control-sm);
+      padding-inline: 0.6em;
+      border: 1px solid transparent;
+      border-radius: var(--s-radius-md);
+      background: none;
+      color: var(--s-text-muted);
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color var(--s-duration-fast) var(--s-ease), color var(--s-duration-fast) var(--s-ease);
+    }
+
+    & :is(a, button):hover:not([aria-disabled="true"], :disabled, [aria-current="page"]) {
+      background: var(--s-surface-2);
+      color: var(--s-text);
+    }
+
+    & [aria-current="page"] {
+      background: var(--tone-solid, var(--s-accent));
+      color: var(--tone-on, var(--s-on-accent));
+      font-weight: var(--s-weight-semibold);
+    }
+
+    & :is([aria-disabled="true"], :disabled) {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    & .pagination-gap { cursor: default; }
+  }
+
+  /* Steps ------------------------------------------------------------------- */
+  .steps {
+    --_size: var(--steps-size, 2rem);
+
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: s-step;
+
+    & > li {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--s-space-2);
+      padding-inline: var(--s-space-1);
+      color: var(--s-text-muted);
+      font-size: var(--s-text-sm);
+      text-align: center;
+      counter-increment: s-step;
+
+      /* the circle */
+      &::before {
+        content: counter(s-step);
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        inline-size: var(--_size);
+        aspect-ratio: 1;
+        border: 2px solid var(--s-border-strong);
+        border-radius: var(--s-radius-full);
+        background: var(--s-surface);
+        color: var(--s-text-muted);
+        font-weight: var(--s-weight-semibold);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* the connector to the next step */
+      &:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        inset-block-start: calc(var(--_size) / 2 - 1px);
+        inset-inline-start: calc(50% + var(--_size) / 2 + 0.25rem);
+        inline-size: calc(100% - var(--_size) - 0.5rem);
+        block-size: 2px;
+        border-radius: 2px;
+        background: var(--s-border);
+      }
+
+      &:is([data-state="done"], .is-done) {
+        color: var(--s-text);
+
+        &::before {
+          content: "✓" / "";
+          border-color: var(--tone-solid, var(--s-accent));
+          background: var(--tone-solid, var(--s-accent));
+          color: var(--tone-on, var(--s-on-accent));
+        }
+
+        &::after { background: var(--tone-solid, var(--s-accent)); }
+      }
+
+      &[aria-current="step"] {
+        color: var(--s-text);
+        font-weight: var(--s-weight-semibold);
+
+        &::before {
+          border-color: var(--tone-solid, var(--s-accent));
+          color: var(--tone-text, var(--s-accent-text));
+          box-shadow: 0 0 0 4px color-mix(in oklab, var(--tone-solid, var(--s-accent)) 22%, transparent);
+        }
+      }
+    }
+  }
+
+  .steps-vertical {
+    flex-direction: column;
+
+    & > li {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--s-space-3);
+      padding: 0 0 var(--s-space-6);
+      text-align: start;
+
+      &::before { flex-shrink: 0; }
+
+      & > * { padding-block-start: calc((var(--_size) - 1.4em) / 2); }
+
+      &:not(:last-child)::after {
+        inset-block-start: calc(var(--_size) + 0.25rem);
+        inset-inline-start: calc(var(--_size) / 2 - 1px);
+        inline-size: 2px;
+        block-size: calc(100% - var(--_size) - 0.5rem);
+      }
+    }
+  }
+}

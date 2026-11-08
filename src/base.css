@@ -137,4 +137,35 @@
     color: var(--s-text-subtle);
     opacity: 1;
   }
+
+  /* Print: light, ink-friendly, no chrome, link URLs visible */
+  @media print {
+    :where(html) {
+      color-scheme: light;
+      background: #fff;
+      color: #000;
+    }
+
+    :where(.navbar, .toast-region, .skip-link, [popover], dialog:not([open])) {
+      display: none !important;
+    }
+
+    :where(a[href^="http"]:not([class]))::after {
+      content: " (" attr(href) ")";
+      font-size: 0.85em;
+      color: #555;
+    }
+
+    :where(pre, blockquote, figure, img, tr, .card, .alert) {
+      break-inside: avoid;
+    }
+
+    :where(h1, h2, h3, h4) {
+      break-after: avoid;
+    }
+
+    :where(.card, .alert, pre, .table-wrap) {
+      box-shadow: none !important;
+    }
+  }
 }

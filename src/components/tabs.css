@@ -1,0 +1,137 @@
+/* ==========================================================================
+   salve · tabs
+   Two ways to use them:
+
+   1) Zero JavaScript — native radios switch the panels:
+      <div class="tabs">
+        <div class="tab-list" role="radiogroup" aria-label="Settings">
+          <label class="tab"><input type="radio" name="t" checked> Account</label>
+          <label class="tab"><input type="radio" name="t"> Billing</label>
+        </div>
+        <div class="tab-panel">…</div>
+        <div class="tab-panel">…</div>
+      </div>
+
+   2) With your own JS (ARIA tabs pattern): style comes from
+      [role="tab"][aria-selected="true"] and panels toggle the `hidden` attribute.
+
+   Variants: .tabs-pills  ·  Tweaks: --tabs-gap
+   ========================================================================== */
+
+@layer salve.components {
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tabs-gap, var(--s-space-4));
+  }
+
+  .tab-list {
+    display: flex;
+    gap: var(--s-space-1);
+    overflow-x: auto;
+    border-block-end: 1px solid var(--s-border);
+    scrollbar-width: none;
+  }
+
+  .tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-shrink: 0;
+    padding: 0.7em 1em;
+    border: 0;
+    background: none;
+    color: var(--s-text-muted);
+    font: inherit;
+    font-size: var(--s-text-sm);
+    font-weight: var(--s-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--s-duration-fast) var(--s-ease);
+
+    /* active indicator */
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0.6em;
+      inset-block-end: -1px;
+      block-size: 2px;
+      border-radius: 2px;
+      background: var(--tone-solid, var(--s-accent));
+      scale: 0 1;
+      transition: scale var(--s-duration) var(--s-ease-out);
+    }
+
+    &:hover { color: var(--s-text); }
+
+    &:is([aria-selected="true"], :has(:checked)) {
+      color: var(--s-text);
+
+      &::after { scale: 1 1; }
+    }
+
+    &:is(:focus-visible, :has(:focus-visible)) {
+      outline: 2px solid var(--s-ring);
+      outline-offset: -2px;
+      border-radius: var(--s-radius-sm);
+    }
+
+    & > input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (forced-colors: active) {
+      &:is([aria-selected="true"], :has(:checked)) { text-decoration: underline; }
+    }
+  }
+
+  /* JS mode: panels are visible unless `hidden` */
+  .tab-panel {
+    animation: s-fade-in var(--s-duration) var(--s-ease);
+  }
+
+  /* CSS-only mode: the n-th checked radio shows the n-th panel */
+  .tabs:has(> .tab-list input[type="radio"]) > .tab-panel { display: none; }
+  .tabs:has(> .tab-list > .tab:nth-child(1) :checked) > .tab-panel:nth-child(1 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(2) :checked) > .tab-panel:nth-child(2 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(3) :checked) > .tab-panel:nth-child(3 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(4) :checked) > .tab-panel:nth-child(4 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(5) :checked) > .tab-panel:nth-child(5 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(6) :checked) > .tab-panel:nth-child(6 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(7) :checked) > .tab-panel:nth-child(7 of .tab-panel),
+  .tabs:has(> .tab-list > .tab:nth-child(8) :checked) > .tab-panel:nth-child(8 of .tab-panel) {
+    display: block;
+  }
+
+  /* Pills variant */
+  .tabs-pills {
+    & .tab-list {
+      align-self: flex-start;
+      max-inline-size: 100%;
+      gap: 2px;
+      padding: 3px;
+      border: 0;
+      border-radius: var(--s-radius-md);
+      background: var(--s-surface-2);
+    }
+
+    & .tab {
+      padding-block: 0.5em;
+      border-radius: calc(var(--s-radius-md) - 2px);
+
+      &::after { display: none; }
+
+      &:is([aria-selected="true"], :has(:checked)) {
+        background: var(--s-surface);
+        box-shadow: var(--s-shadow-sm);
+      }
+    }
+  }
+
+  @keyframes s-fade-in {
+    from { opacity: 0; translate: 0 0.25rem; }
+  }
+}

@@ -143,6 +143,21 @@
     --s-shadow-md: 0 1px 2px var(--s-shadow-color), 0 4px 12px -2px var(--s-shadow-color);
     --s-shadow-lg: 0 2px 4px var(--s-shadow-color), 0 12px 32px -8px var(--s-shadow-color);
     --s-shadow-xl: 0 4px 8px var(--s-shadow-color), 0 24px 64px -12px var(--s-shadow-color);
+    --s-shadow-inner: inset 0 1px 3px var(--s-shadow-color);
+
+    /* ── Brand gradient (follows the theme knobs) ─────────────────────── */
+    --s-gradient: linear-gradient(
+      in oklch 135deg,
+      var(--s-brand-500),
+      oklch(0.64 calc(var(--s-chroma) * 1.1) calc(var(--s-hue) + 90))
+    );
+
+    /* ── Fluid spacing: grows with the viewport, for sections and heroes ─ */
+    --s-space-fluid-xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+    --s-space-fluid-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem);
+    --s-space-fluid-md: clamp(1.25rem, 0.9rem + 1.5vw, 2.25rem);
+    --s-space-fluid-lg: clamp(2rem, 1.4rem + 3vw, 4rem);
+    --s-space-fluid-xl: clamp(3rem, 2rem + 5vw, 6.5rem);
   }
 
   :root {
@@ -195,6 +210,8 @@
     --s-ease: cubic-bezier(0.2, 0, 0, 1);
     --s-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --s-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    /* springy overshoot for small UI movements (toggles, popovers) */
+    --s-ease-spring: linear(0, 0.38 9%, 0.87 20%, 1.06 30%, 1.08 38%, 1.02 52%, 0.99 66%, 1);
     --s-duration-fast: 120ms;
     --s-duration: 200ms;
     --s-duration-slow: 320ms;

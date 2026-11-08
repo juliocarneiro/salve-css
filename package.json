@@ -1,7 +1,7 @@
 {
   "name": "salve-css",
-  "version": "0.1.0",
-  "description": "CSS que alivia: a pure-CSS design system that fixes the everyday pains of styling the web. Layers, fluid type, OKLCH themes, intrinsic layouts, native components.",
+  "version": "0.2.0",
+  "description": "CSS that eases the pain: a pure-CSS design system that fixes the everyday pains of styling the web. Cascade layers, OKLCH themes, intrinsic layouts, native accessible components, ready-made animations and utilities. Zero build, SSR-ready.",
   "type": "module",
   "main": "dist/salve.css",
   "style": "dist/salve.css",
@@ -23,23 +23,30 @@
     "src",
     "lib",
     "bin",
-    "runtime"
+    "runtime",
+    "CHANGELOG.md",
+    "README.pt-BR.md"
   ],
   "scripts": {
     "build": "node bin/salve.js build -c none -o dist/salve.css && node bin/salve.js build -c none -m -o dist/salve.min.css",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
+    "accessibility",
+    "animations",
     "cascade-layers",
+    "components",
     "container-queries",
     "css",
     "css-framework",
     "dark-mode",
     "design-system",
+    "motion",
     "nextjs",
     "oklch",
     "react",
     "ssr",
+    "tailwind-alternative",
     "utility-first"
   ],
   "engines": {

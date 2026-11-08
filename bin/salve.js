@@ -39,7 +39,7 @@ export default {
 
   // drop what you don't use
   modules: {
-    components: ['tone', 'button', 'card', 'form', 'feedback', 'overlay', 'data', 'nav'],
+    components: ['tone', 'button', 'card', 'form', 'feedback', 'overlay', 'data', 'nav', 'tabs', 'navigation', 'content', 'controls'],
     utilities: true,
   },
 
@@ -80,7 +80,7 @@ async function main() {
     return;
   }
 
-  console.log(`salve — CSS que alivia
+  console.log(`salve — CSS that eases the pain
 
 Usage:
   salve init                 create salve.config.js

@@ -1,0 +1,468 @@
+/* ==========================================================================
+   salve · motion
+   Ready-made animations as classes. Everything respects prefers-reduced-motion:
+   one-shot animations collapse to ~0 (they use the duration tokens) and loops stop.
+
+   Entrances   .animate-fade-in  .animate-slide-up/-down/-left/-right
+               .animate-zoom-in  .animate-pop  .animate-blur-in  .animate-flip-in
+               .animate-wipe-right  .animate-rise
+   Exits       .animate-fade-out  .animate-zoom-out  .animate-slide-out-up/-down
+   Attention   .animate-shake  .animate-wiggle  .animate-heartbeat  .animate-tada
+               .animate-jelly
+   Loops       .animate-spin  .animate-spin-slow  .animate-pulse  .animate-ping
+               .animate-bounce  .animate-float  .animate-glow  .animate-gradient
+   Control     .animate-fast  .animate-slow  .animate-slower
+               .delay-{100,200,300,500,700,1000}  .animate-once  .animate-twice
+               .animate-infinite  .animate-paused  .animate-pause-hover
+   Groups      .stagger (children enter one after another)
+   Hover       .hover-grow  .hover-shrink  .hover-float  .hover-glow
+               .hover-shine  .hover-underline  .hover-rotate  .press
+   Scroll      .reveal  .reveal-left/-right/-zoom/-blur  .scroll-progress  .parallax
+   Text        .typewriter  .marquee  .loader-dots
+
+   Tweak any animation with --animate-duration, --animate-delay, --animate-ease,
+   --animate-iterations and --animate-distance.
+   ========================================================================== */
+
+@layer salve.motion {
+  /* ── Shared timing for every keyframe animation ──────────────────────── */
+  :where(
+    .animate-fade-in, .animate-fade-out, .animate-slide-up, .animate-slide-down,
+    .animate-slide-left, .animate-slide-right, .animate-slide-out-up, .animate-slide-out-down,
+    .animate-zoom-in, .animate-zoom-out, .animate-pop, .animate-blur-in, .animate-flip-in,
+    .animate-wipe-right, .animate-rise, .animate-shake, .animate-wiggle, .animate-heartbeat,
+    .animate-tada, .animate-jelly, .stagger > *
+  ) {
+    animation-duration: var(--animate-duration, var(--s-duration-slow));
+    animation-timing-function: var(--animate-ease, var(--s-ease-out));
+    animation-delay: var(--animate-delay, 0s);
+    animation-iteration-count: var(--animate-iterations, 1);
+    animation-fill-mode: both;
+  }
+
+  /* ── Entrances ────────────────────────────────────────────────────────── */
+  .animate-fade-in     { animation-name: s-m-fade-in; }
+  .animate-slide-up    { animation-name: s-m-slide-up; }
+  .animate-slide-down  { animation-name: s-m-slide-down; }
+  .animate-slide-left  { animation-name: s-m-slide-left; }
+  .animate-slide-right { animation-name: s-m-slide-right; }
+  .animate-zoom-in     { animation-name: s-m-zoom-in; }
+  .animate-blur-in     { animation-name: s-m-blur-in; }
+  .animate-wipe-right  { animation-name: s-m-wipe-right; }
+
+  .animate-pop {
+    animation-name: s-m-pop;
+    animation-timing-function: var(--animate-ease, var(--s-ease-spring));
+  }
+
+  .animate-flip-in {
+    animation-name: s-m-flip-in;
+    transform-origin: 50% 0;
+  }
+
+  .animate-rise {
+    animation-name: s-m-rise;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 2));
+  }
+
+  /* ── Exits ───────────────────────────────────────────────────────────── */
+  .animate-fade-out      { animation-name: s-m-fade-out; }
+  .animate-zoom-out      { animation-name: s-m-zoom-out; }
+  .animate-slide-out-up  { animation-name: s-m-slide-out-up; }
+  .animate-slide-out-down { animation-name: s-m-slide-out-down; }
+
+  /* ── Attention seekers ───────────────────────────────────────────────── */
+  .animate-shake {
+    animation-name: s-m-shake;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 1.6));
+    animation-timing-function: var(--animate-ease, linear);
+  }
+
+  .animate-wiggle {
+    animation-name: s-m-wiggle;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 2));
+    transform-origin: 50% 80%;
+  }
+
+  .animate-heartbeat {
+    animation-name: s-m-heartbeat;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 4));
+    animation-timing-function: var(--animate-ease, var(--s-ease-in-out));
+  }
+
+  .animate-tada {
+    animation-name: s-m-tada;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 3));
+  }
+
+  .animate-jelly {
+    animation-name: s-m-jelly;
+    animation-duration: var(--animate-duration, calc(var(--s-duration-slow) * 2.5));
+  }
+
+  /* ── Loops (stop entirely with reduced motion) ───────────────────────── */
+  :where(
+    .animate-spin, .animate-spin-slow, .animate-pulse, .animate-ping,
+    .animate-bounce, .animate-float, .animate-glow, .animate-gradient
+  ) {
+    animation-delay: var(--animate-delay, 0s);
+    animation-iteration-count: var(--animate-iterations, infinite);
+  }
+
+  .animate-spin {
+    animation-name: s-spin;
+    animation-duration: var(--animate-duration, 1s);
+    animation-timing-function: var(--animate-ease, linear);
+  }
+
+  .animate-spin-slow {
+    animation-name: s-spin;
+    animation-duration: var(--animate-duration, 6s);
+    animation-timing-function: var(--animate-ease, linear);
+  }
+
+  .animate-pulse {
+    animation-name: s-m-pulse;
+    animation-duration: var(--animate-duration, 2s);
+    animation-timing-function: var(--animate-ease, var(--s-ease-in-out));
+  }
+
+  .animate-ping {
+    animation-name: s-m-ping;
+    animation-duration: var(--animate-duration, 1.2s);
+    animation-timing-function: var(--animate-ease, cubic-bezier(0, 0, 0.2, 1));
+  }
+
+  .animate-bounce {
+    animation-name: s-m-bounce;
+    animation-duration: var(--animate-duration, 1s);
+  }
+
+  .animate-float {
+    animation-name: s-m-float;
+    animation-duration: var(--animate-duration, 3.5s);
+    animation-timing-function: var(--animate-ease, var(--s-ease-in-out));
+  }
+
+  .animate-glow {
+    animation-name: s-m-glow;
+    animation-duration: var(--animate-duration, 2.4s);
+    animation-timing-function: var(--animate-ease, var(--s-ease-in-out));
+  }
+
+  .animate-gradient {
+    background-image: linear-gradient(
+      in oklch 90deg,
+      var(--s-brand-500),
+      oklch(0.64 calc(var(--s-chroma) * 1.1) calc(var(--s-hue) + 90)),
+      var(--s-brand-500)
+    );
+    background-size: 200% 100%;
+    animation-name: s-m-gradient;
+    animation-duration: var(--animate-duration, 4s);
+    animation-timing-function: var(--animate-ease, linear);
+
+    /* on text: <h1 class="animate-gradient text-clip"> */
+    &.text-clip {
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+  }
+
+  /* ── Control modifiers ───────────────────────────────────────────────── */
+  .animate-fast   { --animate-duration: var(--s-duration); }
+  .animate-slow   { --animate-duration: calc(var(--s-duration-slow) * 2); }
+  .animate-slower { --animate-duration: calc(var(--s-duration-slow) * 3.5); }
+
+  .delay-100  { --animate-delay: 100ms; }
+  .delay-200  { --animate-delay: 200ms; }
+  .delay-300  { --animate-delay: 300ms; }
+  .delay-500  { --animate-delay: 500ms; }
+  .delay-700  { --animate-delay: 700ms; }
+  .delay-1000 { --animate-delay: 1000ms; }
+
+  .animate-once     { --animate-iterations: 1; }
+  .animate-twice    { --animate-iterations: 2; }
+  .animate-infinite { --animate-iterations: infinite; }
+  .animate-paused   { animation-play-state: paused; }
+  .animate-pause-hover:hover { animation-play-state: paused; }
+  .animate-none     { animation: none; }
+
+  /* ── Stagger: children enter one after another ───────────────────────────
+     <ul class="stagger">…</ul>   ·   tweak: --stagger (gap), --animate-duration
+     .stagger-fade / .stagger-zoom change the effect */
+  .stagger > * {
+    animation-name: s-m-slide-up;
+    animation-delay: calc(var(--animate-delay, 0s) + var(--_i, 0) * var(--stagger, 70ms));
+  }
+
+  .stagger-fade > * { animation-name: s-m-fade-in; }
+  .stagger-zoom > * { animation-name: s-m-pop; animation-timing-function: var(--animate-ease, var(--s-ease-spring)); }
+
+  .stagger > :nth-child(2)  { --_i: 1; }
+  .stagger > :nth-child(3)  { --_i: 2; }
+  .stagger > :nth-child(4)  { --_i: 3; }
+  .stagger > :nth-child(5)  { --_i: 4; }
+  .stagger > :nth-child(6)  { --_i: 5; }
+  .stagger > :nth-child(7)  { --_i: 6; }
+  .stagger > :nth-child(8)  { --_i: 7; }
+  .stagger > :nth-child(9)  { --_i: 8; }
+  .stagger > :nth-child(10) { --_i: 9; }
+  .stagger > :nth-child(11) { --_i: 10; }
+  .stagger > :nth-child(n + 12) { --_i: 11; }
+
+  /* ── Hover effects (transitions, so they never fight keyframes) ─────── */
+  :where(.hover-grow, .hover-shrink, .hover-float, .hover-glow, .hover-rotate, .press) {
+    transition:
+      scale var(--s-duration) var(--s-ease-spring),
+      translate var(--s-duration) var(--s-ease-out),
+      rotate var(--s-duration) var(--s-ease-spring),
+      box-shadow var(--s-duration) var(--s-ease);
+  }
+
+  .hover-grow:hover   { scale: 1.05; }
+  .hover-shrink:hover { scale: 0.96; }
+  .hover-rotate:hover { rotate: 3deg; }
+
+  .hover-float:hover {
+    translate: 0 -4px;
+    box-shadow: var(--s-shadow-lg);
+  }
+
+  .hover-glow:hover {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--tone-solid, var(--s-accent)) 40%, transparent),
+      0 8px 32px -6px color-mix(in oklab, var(--tone-solid, var(--s-accent)) 55%, transparent);
+  }
+
+  .press:active { scale: 0.96; }
+
+  /* light sweep across the element */
+  .hover-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        color-mix(in oklab, #fff 35%, transparent) 50%,
+        transparent 65%
+      );
+      translate: -110% 0;
+      pointer-events: none;
+    }
+
+    &:hover::after {
+      translate: 110% 0;
+      transition: translate calc(var(--s-duration-slow) * 2.2) var(--s-ease-in-out);
+    }
+  }
+
+  /* underline that grows from the start of the text */
+  .hover-underline {
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0% 1.5px;
+    transition: background-size var(--s-duration) var(--s-ease-out);
+
+    &:dir(rtl) { background-position-x: 100%; }
+    &:is(:hover, :focus-visible) { background-size: 100% 1.5px; }
+  }
+
+  /* ── Scroll-driven (no JavaScript, progressive enhancement) ─────────── */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      :where(.reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-blur) {
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% cover var(--reveal-at, 28%);
+      }
+
+      .reveal       { animation-name: s-m-reveal; }
+      .reveal-left  { animation-name: s-m-slide-right; }
+      .reveal-right { animation-name: s-m-slide-left; }
+      .reveal-zoom  { animation-name: s-m-zoom-in; }
+      .reveal-blur  { animation-name: s-m-blur-in; }
+
+      /* moves slower than the page: --parallax sets how far (default 15%) */
+      .parallax {
+        animation: s-m-parallax linear both;
+        animation-timeline: view();
+      }
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    /* page reading progress bar: <div class="scroll-progress"></div> */
+    .scroll-progress {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: var(--s-z-toast);
+      block-size: var(--scroll-progress-height, 3px);
+      background: var(--scroll-progress-color, var(--s-gradient));
+      transform-origin: 0 50%;
+      animation: s-m-progress linear both;
+      animation-timeline: scroll(root);
+      pointer-events: none;
+
+      &:dir(rtl) { transform-origin: 100% 50%; }
+    }
+  }
+
+  @supports not (animation-timeline: scroll()) {
+    .scroll-progress { display: none; }
+  }
+
+  /* ── Text & loaders ──────────────────────────────────────────────────── */
+  /* <span class="typewriter" style="--chars: 24">CSS that eases the pain.</span> */
+  .typewriter {
+    display: inline-block;
+    max-inline-size: calc(var(--chars, 20) * 1ch + 0.15em);
+    overflow: hidden;
+    border-inline-end: 0.12em solid currentColor;
+    white-space: nowrap;
+    font-family: var(--s-font-mono);
+    animation:
+      s-m-type calc(var(--chars, 20) * 70ms) steps(var(--chars, 20)) var(--animate-delay, 0.3s) both,
+      s-m-caret 0.8s step-end infinite;
+  }
+
+  /* <div class="marquee"><div class="marquee-track">…items… …same items again…</div></div> */
+  .marquee {
+    overflow: hidden;
+    mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+
+    & > .marquee-track {
+      display: flex;
+      gap: var(--gap, var(--s-space-8));
+      inline-size: max-content;
+      animation: s-m-marquee var(--marquee-duration, 30s) linear infinite;
+    }
+
+    &:hover > .marquee-track { animation-play-state: paused; }
+    &.marquee-reverse > .marquee-track { animation-direction: reverse; }
+  }
+
+  /* three bouncing dots: <span class="loader-dots" role="status" aria-label="Loading"></span> */
+  .loader-dots {
+    --_d: var(--dot-size, 0.5em);
+
+    display: inline-block;
+    inline-size: calc(var(--_d) * 4.4);
+    block-size: var(--_d);
+    background:
+      radial-gradient(circle closest-side, currentColor 90%, transparent) 0% 50%,
+      radial-gradient(circle closest-side, currentColor 90%, transparent) 50% 50%,
+      radial-gradient(circle closest-side, currentColor 90%, transparent) 100% 50%;
+    background-size: var(--_d) var(--_d);
+    background-repeat: no-repeat;
+    animation: s-m-dots 1s infinite linear;
+    vertical-align: middle;
+  }
+
+  /* ── Reduced motion: loops stop, delays go away ──────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    :is(
+      .animate-spin, .animate-spin-slow, .animate-pulse, .animate-ping, .animate-bounce,
+      .animate-float, .animate-glow, .animate-gradient, .marquee > .marquee-track, .loader-dots
+    ) {
+      animation: none;
+    }
+
+    :is([class*="animate-"], .stagger > *) { animation-delay: 0s; }
+
+    .typewriter {
+      max-inline-size: none;
+      border-inline-end: 0;
+      animation: none;
+    }
+
+    :is(.hover-grow, .hover-shrink, .hover-float, .hover-rotate, .press) { transition: none; }
+    .marquee > .marquee-track { flex-wrap: wrap; inline-size: auto; }
+  }
+
+  /* ── Keyframes ───────────────────────────────────────────────────────── */
+  @keyframes s-m-fade-in { from { opacity: 0; } }
+  @keyframes s-m-fade-out { to { opacity: 0; } }
+  @keyframes s-m-slide-up { from { opacity: 0; translate: 0 var(--animate-distance, 1rem); } }
+  @keyframes s-m-slide-down { from { opacity: 0; translate: 0 calc(var(--animate-distance, 1rem) * -1); } }
+  @keyframes s-m-slide-left { from { opacity: 0; translate: var(--animate-distance, 1.5rem) 0; } }
+  @keyframes s-m-slide-right { from { opacity: 0; translate: calc(var(--animate-distance, 1.5rem) * -1) 0; } }
+  @keyframes s-m-slide-out-up { to { opacity: 0; translate: 0 calc(var(--animate-distance, 1rem) * -1); } }
+  @keyframes s-m-slide-out-down { to { opacity: 0; translate: 0 var(--animate-distance, 1rem); } }
+  @keyframes s-m-zoom-in { from { opacity: 0; scale: 0.92; } }
+  @keyframes s-m-zoom-out { to { opacity: 0; scale: 0.92; } }
+  @keyframes s-m-pop { from { opacity: 0; scale: 0.6; } }
+  @keyframes s-m-blur-in { from { opacity: 0; filter: blur(12px); } }
+  @keyframes s-m-flip-in { from { opacity: 0; transform: perspective(600px) rotateX(-70deg); } }
+  @keyframes s-m-wipe-right { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+  @keyframes s-m-rise { from { opacity: 0; translate: 0 2.5rem; filter: blur(6px); } }
+  @keyframes s-m-reveal { from { opacity: 0; translate: 0 2rem; } }
+
+  @keyframes s-m-shake {
+    10%, 90% { translate: -1px 0; }
+    20%, 80% { translate: 3px 0; }
+    30%, 50%, 70% { translate: -6px 0; }
+    40%, 60% { translate: 6px 0; }
+  }
+  @keyframes s-m-wiggle {
+    15% { rotate: -12deg; }
+    30% { rotate: 10deg; }
+    45% { rotate: -8deg; }
+    60% { rotate: 5deg; }
+    75% { rotate: -2deg; }
+  }
+  @keyframes s-m-heartbeat {
+    0%, 28%, 70% { scale: 1; }
+    14%, 42% { scale: 1.18; }
+  }
+  @keyframes s-m-tada {
+    10%, 20% { scale: 0.92; rotate: -3deg; }
+    30%, 50%, 70%, 90% { scale: 1.1; rotate: 3deg; }
+    40%, 60%, 80% { scale: 1.1; rotate: -3deg; }
+  }
+  @keyframes s-m-jelly {
+    30% { scale: 1.2 0.85; }
+    40% { scale: 0.85 1.2; }
+    50% { scale: 1.1 0.9; }
+    65% { scale: 0.96 1.04; }
+    75% { scale: 1.03 0.97; }
+  }
+  @keyframes s-m-pulse { 50% { opacity: 0.45; } }
+  @keyframes s-m-ping { 75%, 100% { scale: 2; opacity: 0; } }
+  @keyframes s-m-bounce {
+    0%, 100% { translate: 0 -22%; animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+    50% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  }
+  @keyframes s-m-float { 50% { translate: 0 -8px; } }
+  @keyframes s-m-glow {
+    50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--tone-solid, var(--s-accent)) 25%, transparent); }
+  }
+  @keyframes s-m-gradient { to { background-position: -200% 0; } }
+  @keyframes s-m-parallax {
+    from { translate: 0 calc(var(--parallax, 15%) * -1); }
+    to { translate: 0 var(--parallax, 15%); }
+  }
+  @keyframes s-m-progress { from { scale: 0 1; } }
+  @keyframes s-m-type { from { max-inline-size: 0; } }
+  @keyframes s-m-caret { 50% { border-color: transparent; } }
+  @keyframes s-m-marquee { to { translate: calc(-50% - var(--gap, var(--s-space-8)) / 2) 0; } }
+  @keyframes s-m-dots {
+    0% { background-position: 0% 50%, 50% 50%, 100% 50%; }
+    16% { background-position: 0% 0%, 50% 50%, 100% 50%; }
+    33% { background-position: 0% 100%, 50% 0%, 100% 50%; }
+    50% { background-position: 0% 50%, 50% 100%, 100% 0%; }
+    66% { background-position: 0% 50%, 50% 50%, 100% 100%; }
+    83%, 100% { background-position: 0% 50%, 50% 50%, 100% 50%; }
+  }
+  @keyframes s-spin { to { rotate: 1turn; } }
+}

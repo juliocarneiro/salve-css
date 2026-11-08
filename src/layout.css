@@ -169,4 +169,95 @@
   .cq {
     container-type: inline-size;
   }
+
+  /* Flow — vertical rhythm for content blocks (margins between siblings only). */
+  .flow > :where(* + *) {
+    margin-block-start: var(--flow-space, 1em);
+  }
+
+  /* Layers — stack children on top of each other without position: absolute.
+     Image + overlay text, badges over cards, loading states over content. */
+  .layers {
+    display: grid;
+    place-items: var(--place, center);
+
+    & > * { grid-area: 1 / 1; }
+  }
+
+  /* Bento — tile grid where items span columns/rows (.span-2, .row-span-2). */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+    grid-auto-rows: var(--row, minmax(9rem, auto));
+    grid-auto-flow: dense;
+    gap: var(--gap, var(--s-space-4));
+
+    @media (width < 48rem) {
+      --cols: 2;
+
+      & > :is(.span-3, .span-4, .span-5, .span-6) { grid-column: span 2; }
+    }
+  }
+
+  /* Masonry — Pinterest-style columns of uneven items, no JavaScript. */
+  .masonry {
+    columns: var(--min, 16rem);
+    column-gap: var(--gap, var(--s-space-4));
+
+    & > * {
+      break-inside: avoid;
+      margin-block-end: var(--gap, var(--s-space-4));
+    }
+  }
+
+  /* App shell — header, optional sidebar, main and footer.
+     Sticky header, sidebar that scrolls on its own, footer always at the bottom. */
+  .app-shell {
+    --_header: var(--header-h, 4rem);
+
+    display: grid;
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+    grid-template:
+      "header header" auto
+      "side main" 1fr
+      "footer footer" auto / var(--side, 16rem) minmax(0, 1fr);
+
+    &:not(:has(> :is(aside, .app-side))) {
+      grid-template:
+        "header" auto
+        "main" 1fr
+        "footer" auto / minmax(0, 1fr);
+    }
+
+    & > :is(header, .app-header) {
+      grid-area: header;
+      position: sticky;
+      inset-block-start: 0;
+      z-index: var(--s-z-sticky);
+    }
+
+    & > :is(aside, .app-side) {
+      grid-area: side;
+      position: sticky;
+      inset-block-start: var(--_header);
+      align-self: start;
+      max-block-size: calc(100dvh - var(--_header));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    & > main { grid-area: main; min-inline-size: 0; }
+    & > footer { grid-area: footer; }
+
+    /* phones: the sidebar steps aside (open it in a .drawer instead) */
+    @media (width < 48rem) {
+      grid-template:
+        "header" auto
+        "main" 1fr
+        "footer" auto / minmax(0, 1fr);
+
+      & > :is(aside, .app-side) { display: none; }
+    }
+  }
 }

@@ -1,0 +1,327 @@
+/* ==========================================================================
+   salve · more controls
+   .chip  ·  .btn-group  ·  .rating / .stars  ·  .dropzone  ·  .field-float
+   .input-sm / .input-lg  ·  .indicator  ·  .ring-progress
+   ========================================================================== */
+
+/* Registered so the ring can animate between values (must be outside layers) */
+@property --ring-value {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@layer salve.components {
+  /* Chip: filter tags (checkbox inside) or removable tags --------------------- */
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-block-size: var(--s-control-sm);
+    padding-inline: 0.85em;
+    border: 1px solid var(--s-border-strong);
+    border-radius: var(--s-radius-full);
+    background: var(--s-surface);
+    color: var(--s-text);
+    font-size: var(--s-text-sm);
+    font-weight: var(--s-weight-medium);
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--s-duration-fast) var(--s-ease),
+      border-color var(--s-duration-fast) var(--s-ease),
+      color var(--s-duration-fast) var(--s-ease);
+
+    &:hover { background: var(--s-surface-2); }
+
+    &:is(:has(:checked), [aria-pressed="true"]) {
+      border-color: var(--tone-solid, var(--s-accent));
+      background: var(--tone-subtle, var(--s-accent-subtle));
+      color: var(--tone-text, var(--s-accent-text));
+    }
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--s-ring);
+      outline-offset: 2px;
+    }
+
+    & > input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    & > .chip-remove {
+      display: inline-grid;
+      place-items: center;
+      inline-size: 1.4em;
+      aspect-ratio: 1;
+      margin-inline-end: -0.45em;
+      padding: 0;
+      border: 0;
+      border-radius: var(--s-radius-full);
+      background: none;
+      color: inherit;
+      font: inherit;
+      line-height: 1;
+      opacity: 0.65;
+      cursor: pointer;
+
+      &:hover {
+        background: color-mix(in oklab, currentColor 15%, transparent);
+        opacity: 1;
+      }
+    }
+  }
+
+  /* Button group: joined buttons ---------------------------------------------- */
+  .btn-group {
+    display: inline-flex;
+    isolation: isolate;
+
+    & > .btn {
+      border-radius: 0;
+
+      &:focus-visible { z-index: 1; }
+    }
+
+    & > .btn:first-child {
+      border-start-start-radius: var(--btn-radius, var(--s-radius-md));
+      border-end-start-radius: var(--btn-radius, var(--s-radius-md));
+    }
+
+    & > .btn:last-child {
+      border-start-end-radius: var(--btn-radius, var(--s-radius-md));
+      border-end-end-radius: var(--btn-radius, var(--s-radius-md));
+    }
+
+    & > .btn:not(:first-child) {
+      margin-inline-start: -1px;
+      border-inline-start-color: color-mix(in oklab, var(--_fg) 22%, transparent);
+    }
+  }
+
+  /* Rating: radio stars, no JavaScript -------------------------------------- */
+  .rating {
+    --_on: var(--rating-color, var(--s-warning));
+    --_off: var(--s-border-strong);
+
+    display: inline-flex;
+    gap: 0.15em;
+    border-radius: var(--s-radius-sm);
+    font-size: var(--rating-size, 1.5rem);
+
+    & > input {
+      appearance: none;
+      inline-size: 1em;
+      block-size: 1em;
+      margin: 0;
+      background: var(--_off);
+      mask: var(--_star) center / contain no-repeat;
+      cursor: pointer;
+      transition:
+        background-color var(--s-duration-fast) var(--s-ease),
+        scale var(--s-duration-fast) var(--s-ease-spring);
+    }
+
+    &:has(:checked) > input { background: var(--_on); }
+    & > input:checked ~ input { background: var(--_off); }
+
+    /* hover preview wins over the checked value */
+    &:hover > input:nth-child(n) { background: var(--_on); }
+    & > input:hover ~ input:nth-child(n) { background: var(--_off); }
+    & > input:hover { scale: 1.15; }
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--s-ring);
+      outline-offset: 4px;
+    }
+
+    @media (forced-colors: active) {
+      & > input { forced-color-adjust: none; }
+    }
+  }
+
+  /* Read-only stars with fractions: <span class="stars" style="--value: 4.5" role="img" aria-label="4,5 de 5"> */
+  .stars {
+    --_pct: calc(var(--value, 0) / var(--max, 5) * 100%);
+
+    display: inline-block;
+    inline-size: calc(var(--max, 5) * 1em);
+    block-size: 1em;
+    vertical-align: -0.125em;
+    background: linear-gradient(
+      90deg,
+      var(--rating-color, var(--s-warning)) var(--_pct),
+      var(--s-border-strong) var(--_pct)
+    );
+    mask: var(--_star) 0 0 / 1em 1em repeat-x;
+    font-size: var(--rating-size, 1.1rem);
+  }
+
+  :is(.rating, .stars) {
+    --_star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z'/%3E%3C/svg%3E");
+  }
+
+  /* Dropzone: the file input covers the area, so drag-and-drop works natively */
+  .dropzone {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--s-space-2);
+    padding: var(--s-space-8) var(--s-space-6);
+    border: 2px dashed var(--s-border-strong);
+    border-radius: var(--s-radius-lg);
+    background: var(--s-surface);
+    color: var(--s-text-muted);
+    font-size: var(--s-text-sm);
+    text-align: center;
+    transition:
+      border-color var(--s-duration-fast) var(--s-ease),
+      background-color var(--s-duration-fast) var(--s-ease),
+      color var(--s-duration-fast) var(--s-ease);
+
+    &:is(:hover, :has(:focus-visible), .is-dragover) {
+      border-color: var(--s-accent);
+      background: var(--s-accent-subtle);
+      color: var(--s-accent-text);
+    }
+
+    &:has(:focus-visible) {
+      outline: 2px solid var(--s-ring);
+      outline-offset: 2px;
+    }
+
+    & > input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    & strong { color: var(--s-text); }
+
+    & > .dropzone-icon {
+      --si-size: 2rem;
+      font-size: 2rem;
+    }
+  }
+
+  /* Floating label: <div class="field-float"><input class="input" placeholder=" " id="n"><label for="n">Nome</label></div> */
+  .field-float {
+    position: relative;
+
+    & > .input {
+      min-block-size: var(--s-control-lg);
+      padding-block: 1.35em 0.4em;
+    }
+
+    & > textarea.input { padding-block-start: 1.6em; }
+
+    & > label {
+      position: absolute;
+      inset-inline-start: calc(0.8em + 1px);
+      inset-block-start: 50%;
+      color: var(--s-text-subtle);
+      font-size: var(--s-text-sm);
+      line-height: 1.2;
+      pointer-events: none;
+      translate: 0 -50%;
+      transition:
+        inset-block-start var(--s-duration) var(--s-ease),
+        translate var(--s-duration) var(--s-ease),
+        font-size var(--s-duration) var(--s-ease),
+        color var(--s-duration) var(--s-ease);
+    }
+
+    &:has(> textarea) > label { inset-block-start: 1.1em; }
+
+    &:has(> .input:focus, > .input:not(:placeholder-shown)) > label {
+      inset-block-start: 0.45em;
+      color: var(--s-text-muted);
+      font-size: var(--s-text-xs);
+      translate: 0 0;
+    }
+
+    &:has(> .input:focus) > label { color: var(--s-accent-text); }
+    &:has(> .input:user-invalid) > label { color: var(--s-danger-text); }
+  }
+
+  /* Input sizes */
+  .input-sm {
+    --input-height: var(--s-control-sm);
+    padding: 0.3em 0.65em;
+    font-size: var(--s-text-xs);
+  }
+
+  .input-lg {
+    --input-height: var(--s-control-lg);
+    padding: 0.6em 0.95em;
+    font-size: var(--s-text-base);
+  }
+
+  /* Indicator: dot or count on top of an avatar, icon or button ---------------- */
+  .indicator {
+    position: relative;
+    display: inline-flex;
+
+    & > .indicator-dot {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-end: 0;
+      display: grid;
+      place-items: center;
+      min-inline-size: 0.65rem;
+      block-size: 0.65rem;
+      border-radius: var(--s-radius-full);
+      background: var(--tone-solid, var(--s-danger));
+      box-shadow: 0 0 0 2px var(--indicator-ring, var(--s-bg));
+      color: var(--tone-on, var(--s-on-danger));
+      font-size: 0.65rem;
+      font-weight: var(--s-weight-bold);
+      line-height: 1;
+      translate: 25% -25%;
+
+      &:dir(rtl) { translate: -25% -25%; }
+
+      &:not(:empty) {
+        min-inline-size: 1.15rem;
+        block-size: 1.15rem;
+        padding-inline: 0.3em;
+      }
+    }
+  }
+
+  /* Ring progress: <div class="ring-progress" style="--ring-value: 72" role="progressbar" aria-valuenow="72">72%</div> */
+  .ring-progress {
+    --_size: var(--ring-size, 4rem);
+    --_thick: var(--ring-thickness, 0.4rem);
+
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--_size);
+    aspect-ratio: 1;
+    font-size: calc(var(--_size) * 0.24);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--s-weight-semibold);
+    transition: --ring-value var(--s-duration-slow) var(--s-ease-out);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--tone-solid, var(--s-accent)) calc(var(--ring-value) * 1%),
+        var(--s-surface-2) 0
+      );
+      mask: radial-gradient(
+        farthest-side,
+        transparent calc(100% - var(--_thick)),
+        #000 calc(100% - var(--_thick) + 1px)
+      );
+    }
+  }
+}
