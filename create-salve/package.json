@@ -1,0 +1,44 @@
+{
+  "name": "create-salve",
+  "version": "0.1.0",
+  "description": "Start a project with salve-css (and salve-icons) in one command: npm create salve@latest. HTML, JavaScript, React, Vue, Svelte, Next.js, Astro or Veloz, or add salve to the project you already have.",
+  "keywords": [
+    "salve",
+    "salve-css",
+    "salve-icons",
+    "create",
+    "scaffold",
+    "starter",
+    "template",
+    "css",
+    "design-system"
+  ],
+  "type": "module",
+  "bin": {
+    "create-salve": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "author": "Julio Carneiro",
+  "license": "MIT",
+  "homepage": "https://salve-site-mu.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliocarneiro/salve-css.git",
+    "directory": "create-salve"
+  },
+  "bugs": {
+    "url": "https://github.com/juliocarneiro/salve-css/issues"
+  }
+}

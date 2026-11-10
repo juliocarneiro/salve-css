@@ -1,0 +1,40 @@
+import { toggleTheme } from 'salve-css/theme';
+
+export function App() {
+  return (
+    <>
+      <header class="navbar">
+        <strong class="brand"><i class="si si-salve" aria-hidden="true"></i> __PROJECT_NAME__</strong>
+        <nav class="cluster" aria-label="Main">
+          <a class="nav-link" href="https://salve-site-mu.vercel.app">Docs</a>
+          <button class="btn btn-sm btn-ghost" type="button" onClick={toggleTheme}><i class="si si-moon" aria-hidden="true"></i> Theme</button>
+        </nav>
+      </header>
+      <main class="container stack" style="--gap: var(--s-space-12); padding-block: var(--s-space-section)">
+        <section class="stack" style="--gap: var(--s-space-4)">
+          <span class="badge badge-dot">salve-css + Veloz</span>
+          <h1>Your project is ready</h1>
+          <p class="lead">Edit <code>src/App.tsx</code> and save. Every class on this page comes from salve-css: no CSS of your own yet.</p>
+          <div class="cluster">
+            <a class="btn btn-lg" href="https://salve-site-mu.vercel.app/#componentes">Browse components <i class="si si-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn-lg btn-ghost" href="https://salve-site-mu.vercel.app/#customizar">Customize the theme</a>
+          </div>
+        </section>
+        <section class="grid" style="--min: 16rem">
+          <article class="card stack">
+            <h3 class="text-xl"><i class="si si-layout-grid" aria-hidden="true"></i> Layouts without media queries</h3>
+            <p class="text-muted"><code>.stack</code>, <code>.cluster</code>, <code>.grid</code> and <code>.sidebar</code> adapt to the space on their own.</p>
+          </article>
+          <article class="card stack">
+            <h3 class="text-xl"><i class="si si-palette" aria-hidden="true"></i> A theme from four variables</h3>
+            <p class="text-muted">Change <code>--s-hue</code>, <code>--s-chroma</code>, <code>--s-radius</code> and <code>--s-density</code> on <code>:root</code>.</p>
+          </article>
+          <article class="card stack">
+            <h3 class="text-xl"><i class="si si-moon" aria-hidden="true"></i> Dark mode built in</h3>
+            <p class="text-muted">It follows the system. The Theme button saves your choice, with no flash on reload.</p>
+          </article>
+        </section>
+      </main>
+    </>
+  );
+}

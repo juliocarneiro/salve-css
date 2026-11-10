@@ -69,6 +69,14 @@ Quem escreve CSS esbarra sempre nos mesmos problemas. O salve resolve cada um de
 
 ## Instalação
 
+### Projeto novo ou existente: o instalador
+
+```bash
+npm create salve@latest
+```
+
+Escolha o framework (HTML, JavaScript, React, Vue, Svelte, Next.js, Astro ou Veloz) e se quer o salve-icons; ele instala tudo e entrega uma página de exemplo com o botão de tema claro/escuro. Dentro de um projeto que você já tem, `npm create salve@latest -- --add` detecta o framework, instala o salve e coloca os imports no arquivo de entrada. Detalhes no [create-salve](create-salve/README.md).
+
 ### CDN (mais rápido)
 
 ```html

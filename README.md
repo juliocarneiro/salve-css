@@ -69,6 +69,14 @@ Everyone who writes CSS runs into the same problems. salve fixes each one at the
 
 ## Installation
 
+### New project or existing one: the installer
+
+```bash
+npm create salve@latest
+```
+
+Pick a framework (HTML, JavaScript, React, Vue, Svelte, Next.js, Astro or Veloz) and whether you want salve-icons; it installs everything and gives you a sample page with a light/dark toggle. Inside a project you already have, `npm create salve@latest -- --add` detects the framework, installs salve and adds the imports to your entry file. Details in [create-salve](create-salve/README.md).
+
 ### CDN (fastest)
 
 ```html
